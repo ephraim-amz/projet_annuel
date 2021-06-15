@@ -2,17 +2,19 @@
 #include <iostream>
 #include <stdlib.h>
 #include <math.h>
+#include <time.h>
+#include <SFML/Graphics.hpp>
 
 class MLP {
 
     public:
 
-    float ***W;
+    int ***W;
     int *d;
     float **X;
     float **deltas;
 
-    MLP(float ***W, int *d, float **X, float **deltas) {
+    MLP(int ***W, int *d, float **X, float **deltas) {
         this->W = W;
         this->d = d;
         this->X = X;
@@ -21,20 +23,18 @@ class MLP {
 
     void forward_pass(float *sample_inputs, bool is_classification) {
         int L = sizeof(this->d)/sizeof(this->d[0]) - 1;
-
         for (int j = 0; j < this->d[0] + 1; j++) {
             this->X[0][j] = sample_inputs[j - 1];
         }
-
-        for (int l = 0; l < L + 1; l++) {
-			for (int j = 0; j < this->d[l] + 1; j++) {
+        for (int l = 1; l < L + 1; l++) {
+			for (int j = 1; j < this->d[l] + 1; j++) {
                 float sum_result = 0.0;
-                for (int i = 0; i < this->d[l - 1] + 1; i++) {
+                for (int i = 0; i < this->d[l - 1]; i++) {
                     sum_result += this->W[l][i][j] * this->X[l - 1][i];
                 }
                 this->X[l][j] = sum_result;
                 if (is_classification or l < L) {
-                    this->X[l][j] = tanh(this->X[l][j]); //math->tanh python à faire
+                    this->X[l][j] = tanh(this->X[l][j]);
                 }
             }
         }
@@ -63,13 +63,10 @@ class MLP {
         int output_dim = this->d[sizeof(this->d) / sizeof(this->d[0]) - 1];
         int samples_count = sizeof(flattened_dataset_inputs) / sizeof(flattened_dataset_inputs[0]) / input_dim;
         int L = sizeof(this->d) / sizeof(d[0]) - 1;
-
         for (int it = 0; it < iterations_count; it++) {
             int k = rand() % samples_count - 1;
-
-            float *sample_input = get_sample_input(flattened_dataset_inputs, input_dim, k); // flattened_dataset_inputs[k * input_dim:(k+1) * input_dim]; // ??????
-            float *sample_expected_output = get_sample_output(flattened_dataset_expected_outputs, output_dim, k); // flattened_dataset_expected_outputs[k * output_dim:(k+1) * output_dim];
-
+            float *sample_input = get_sample_input(flattened_dataset_inputs, input_dim, k);
+            float *sample_expected_output = get_sample_output(flattened_dataset_expected_outputs, output_dim, k);
             this->forward_pass(sample_input, is_classification);
             for (int j = 1; j < this->d[L]; j++) {
                 this->deltas[L][j] = (this->X[L][j] - sample_expected_output[j - 1]);
@@ -98,13 +95,13 @@ class MLP {
 };
 
 MLP create_mlp_model(int *npl) {
-    float ***W;
-    W = (float***)malloc(sizeof(float**) * 255);
+    int ***W;
+    W = (int***)malloc(sizeof(int**) * 255);
     for (int l = 0; l < sizeof(npl) / sizeof(npl[0]); l++) {
-		W[l] = (float**)malloc(sizeof(float*) * 255);
+		W[l] = (int**)malloc(sizeof(int*) * 255);
         if (l != 0) {
             for (int i = 0; i < npl[l - 1]; i++) {
-				W[l][i] = (float*)malloc(sizeof(float) * 255);
+				W[l][i] = (int*)malloc(sizeof(int) * 255);
                 for (int j = 0; j < npl[l]; j++) {
                     W[l][i][j] = rand() % 3 - 1;
                 }
@@ -154,11 +151,20 @@ void train_regression_stochastic_gradient_backpropagation_mlp_model(MLP model, f
 }
 
 int main() {
+	srand (time(NULL));
+	float dataset_inputs[3];
+	dataset_inputs[0] = -5;
+	dataset_inputs[1] = 4;
+	dataset_inputs[2] = 6;
+	float dataset_expected_outputs[3];
+	dataset_expected_outputs[0] = 1.2;
+	dataset_expected_outputs[1] = 7;
+	dataset_expected_outputs[2] = 8.3;
 	int datas[5];
 	datas[0] = 1;
-	datas[1] = 1;
+	datas[1] = 3;
 	datas[2] = 1;
-	datas[3] = 1;
-	datas[4] = 1;
 	MLP model = create_mlp_model(datas);
+	train_regression_stochastic_gradient_backpropagation_mlp_model(model, dataset_inputs, dataset_expected_outputs);
+    return 0;
 }
