@@ -3,7 +3,7 @@ from random import randint
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
-data = pd.read_csv('../dataset.csv')
+data = pd.read_csv('dataset.csv')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -15,8 +15,11 @@ def load_random_movie():
     return random_movie
 
 
+
+
 @app.route('/movie', methods=['GET'])
 def movie():
+    global random_movie 
     random_movie = load_random_movie()
     title = random_movie['originalTitle']
     director = random_movie['director']
@@ -29,9 +32,13 @@ def movie():
 
 @app.route('/note', methods=['POST'])
 def note():
-    note = request.form['chiffre']
-    print(note)
-    return render_template('note.html', note=note)  
+    user_note = request.form['chiffre']
+    title = random_movie['originalTitle']
+    director = random_movie['director']
+    primary_name = random_movie['primaryName']
+    genres = random_movie['genres']
+    average_rating = random_movie['averageRating']
+    return render_template('note.html', note=average_rating, vrai_note=user_note, title=title, director=director, primary_name=primary_name, genres=genres)  
 
 
 if __name__ == '__main__':
