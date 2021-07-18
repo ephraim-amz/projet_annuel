@@ -21,19 +21,21 @@ def movie():
     director = random_movie['director']
     primary_name = random_movie['primaryName']
     genres = random_movie['genres']
-    average_rating = random_movie['averageRating']
-    # Augmenter la variable numVotes lorsque l'utilisateur note un film
-    return render_template('movie.html', title=title, director=director, primary_name=primary_name, genres=genres, average_rating=average_rating)
+    annee_sortie = random_movie['startYear']
+
+    return render_template('movie.html', title=title, director=director, primary_name=primary_name, genres=genres, annee_sortie=annee_sortie)
 
 @app.route('/note', methods=['POST'])
 def note():
-    user_note = request.form['chiffre']
+    note_user = request.form['note']
     title = random_movie['originalTitle']
     director = random_movie['director']
     primary_name = random_movie['primaryName']
     genres = random_movie['genres']
     average_rating = random_movie['averageRating']
-    return render_template('note.html', note=average_rating, vrai_note=user_note, title=title, director=director, primary_name=primary_name, genres=genres)  
+    annee_sortie = random_movie['startYear']
+
+    return render_template('note.html', note_user=note_user, note_film=average_rating, title=title, director=director, primary_name=primary_name, genres=genres, annee_sortie=annee_sortie)  
 
 
 if __name__ == '__main__':
