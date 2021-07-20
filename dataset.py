@@ -1,14 +1,13 @@
+#%%
 from sklearn.preprocessing import LabelEncoder
 import pandas as pd
-dataset = pd.read_csv('dataset.csv')
 
-label_enc = LabelEncoder()
+lbl_encoder = LabelEncoder()
+dataset = pd.read_csv('categorical_dataset.csv')
+dataset = dataset[~dataset['genres'].str.contains('Adult')]
 
-for col in dataset.columns:
-    if col not in ['startYear','runtimeMinutes','averageRating','numVotes']:
-        dataset[col] = label_enc.fit_transform(dataset[col])
+dataset['genres'] = lbl_encoder.fit_transform(dataset['genres'])
 
-dataset['startYear'] = dataset['startYear'].astype(int)
-dataset = dataset.sort_values(by='startYear', ascending=False)
+dataset[['startYear', 'genres', 'numVotes']].to_csv('dataset.csv', index=None)
 
-dataset.to_csv('label_encoded_dataset.csv')
+# %%
