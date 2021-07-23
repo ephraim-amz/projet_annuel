@@ -3,7 +3,7 @@ from random import randint
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
-data = pd.read_csv('dataset.csv')
+data = pd.read_csv('categorical_dataset.csv')
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -34,6 +34,18 @@ def note():
     genres = random_movie['genres']
     average_rating = random_movie['averageRating']
     annee_sortie = random_movie['startYear']
+
+    return render_template('note.html', note_user=note_user, note_film=average_rating, title=title, director=director, primary_name=primary_name, genres=genres, annee_sortie=annee_sortie)  
+
+@app.route('/no_note', methods=['POST'])
+def note2():
+    note_user = request.form['no_note']
+    title = random_movie['originalTitle']
+    director = random_movie['director']
+    primary_name = random_movie['primaryName']
+    genres = random_movie['genres']
+    average_rating = random_movie['averageRating']
+    annee_sortie = random_movie['startYear'] 
 
     return render_template('note.html', note_user=note_user, note_film=average_rating, title=title, director=director, primary_name=primary_name, genres=genres, annee_sortie=annee_sortie)  
 
