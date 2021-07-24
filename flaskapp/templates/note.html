@@ -24,8 +24,18 @@
 
       <p>Genre: <strong>{{genres}}</strong></p>
   
-        <p>Note utilisateur <strong>{{note_user}}</strong></p>
-        <p>Note utilisateur <strong>Vous avez décidé de ne pas noter ce film</strong></p>
+      {% if hasNote and note_user==note_film -%}
+        <p>Félicitations, vous avez trouvé la bonne note, vous avez mieux fait que le modèle 1,2,3</p> 
+      {%- elif diff > 0. and diff < 2. -%}
+          <p>Ce n'était pas la bonne note, la bonne note est : <strong>{{note_user}}</strong> mais vous étiez proche de {{diff}} de la bonne réponse</p>
+        {%- elif diff > 2. and diff < 4. -%}
+          <p>Ce n'était pas la bonne note, la bonne note est : <strong>{{note_user}}</strong> et vous étiez pas trop loin ({{diff}}) de la bonne réponse</p>
+        {%-elif diff > 4. -%}
+          <p>Ce n'était pas la bonne note, la bonne note est : <strong>{{note_user}}</strong> et vous étiez loin de la bonne réponse</p>
+      {%- endif %}
+      {%if not hasNote %}
+        <p><strong>Vous avez décidé de ne pas noter ce film</strong></p>
+      {% endif %}
 
       <p>Vrai note <strong>{{note_film}}</strong></p>
     </div>
