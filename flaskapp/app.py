@@ -5,6 +5,9 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 data = pd.read_csv('categorical_dataset.csv')
+if 'user_note' not in data.columns:
+    data['user_note'] = None
+
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -40,6 +43,9 @@ def note():
         diff = note_user-average_rating
     else:
         diff = average_rating-note_user
+
+    diff = float(format(float(diff), ".2f"))
+    
     
     return render_template('note.html', note_user=note_user, note_film=average_rating, title=title, director=director, primary_name=primary_name, genres=genres, annee_sortie=annee_sortie, hasNote=True, diff=diff)  
 
