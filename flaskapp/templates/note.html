@@ -20,11 +20,23 @@
       <br>
       <p>Réalisateur: <strong>{{director}}</strong></p>
       <p>Acteur principal: <strong>{{primary_name}}</strong></p>
-      <p>Année: <strong>{{annee_sortie}</strong></p>
+      <p>Année: <strong>{{annee_sortie}}</strong></p>
 
       <p>Genre: <strong>{{genres}}</strong></p>
   
-      <p>Note utilisateur <strong>{{note_user}}</strong></p>
+      {% if hasNote and note_user==note_film %}
+        <p>Félicitations, vous avez trouvé la bonne note, vous avez mieux fait que le modèle 1,2,3</p>  
+      {% endif %}
+      
+      {% if hasNote and note_user!=note_film %}
+          <p>Ce n'était pas la bonne mais vous étiez proche de {{diff}} de la bonne réponse</p>
+      {%- endif %}
+      
+    
+      {% if not hasNote %}
+        <p><strong>Vous avez décidé de ne pas noter ce film</strong></p>
+      {% endif %}
+
       <p>Vrai note <strong>{{note_film}}</strong></p>
     </div>
 
