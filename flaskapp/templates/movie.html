@@ -28,12 +28,10 @@
     <p>Année:<strong> {{annee_sortie}}</strong></p>
 
     <p>Genre:<strong> {{genres}}</strong></p>
-    <p>Genre:<strong> {{average_rating}}</strong></p>
-
   
     <form role="form" action="/note" method="POST">
       <label for="note">Si vous avez déjà vu ce film, quel note vous lui donneriez :</label>
-      <input type="range" id="note" name="note" min="0" max="10" oninput="this.nextElementSibling.value = this.value" step="0.01"  style="width: 55%; vertical-align:middle;"/><output for="chiffre" onforminput="value = foo.valueAsNumber;"></output>
+      <input type="range" id="note" name="note" min="0" max="10" oninput="this.nextElementSibling.value = this.value" step="1"  style="width: 55%; vertical-align:middle;"/><output for="chiffre" onforminput="value = foo.valueAsNumber;"></output>
       <button type="submit" class="btn btn-warning">Valider</button>
       <a href="/movie"><button type="button" class="btn btn-primary">Changer de film</button></a>
     </form> 
