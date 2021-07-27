@@ -1,4 +1,3 @@
-#%%
 import tensorflow as tf
 
 from tensorflow.keras import layers
@@ -39,4 +38,3 @@ def main(lr, epochs, name):
 
 if __name__ == '__main__':
     main(0.1, 100, 'courbe3.png')
-# %%
